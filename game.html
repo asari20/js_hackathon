@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+   
+    <script src="https://kit.fontawesome.com/c117fbda8a.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+
+    <title>ポケモンいえるかな？</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header_wrap">
+            <div></div>
+            <h1 class="game_title">ポケモンいえるかな？</h1>
+            <nav id="logout" class="nav">
+                <i class="fa-solid fa-right-from-bracket" ></i>
+                <p id="logout_text" class="logout_text" style="display: none;" >ログアウト</p>
+            </nav>
+        </div>
+    </header>
+    <main>
+        
+        <section id="home" class="home">
+            <div class="home_wrap">
+                <img src="img/map.jpg" alt="map" class="map">
+                <button id="quiz_btn" class="btn quiz_btn float">ぼうけんを<br>はじめる</button>
+                <button id="index_btn" class="btn index_btn float">ずかんを<br>みる</button>
+            </div>
+        </section>
+        <section id="version_select" class="version_select" style="display: none;">
+
+            <div class="select_area">
+                <select name="version" id="version" class="version">
+                    <option value="generation-i">赤・緑</option>
+                    <option value="generation-ii">金・銀</option>
+                    <option value="generation-iii">ルビー・サファイア</option>
+                    <option value="generation-iv">ダイヤモンド・パール</option>
+                    <option value="generation-v">ブラック・ホワイト</option>
+                    <option value="generation-vi">X・Y</option>
+                    <option value="generation-vii">サン・ムーン</option>
+                    <option value="generation-viii">ソード・シールド</option>
+                </select>
+                <button id="version_send" class="btn">ぼうけんにいく</button>
+            </div>
+            <div class="select_img">
+                <img src="./img/red_green.jpg" alt="" name="generation-i" id="red_green">
+                <img src="./img/gold_silver.jpg" alt="" name="generation-ii" id="gold_silver">
+                <img src="./img/ruby_saphia.jpg" alt="" name="generation-iii" id="ruby_saphia">
+                <img src="./img/diamond_parl.jpg" alt="" name="generation-iv" id="diamond_parl">
+                <img src="./img/black_white.jpg" alt="" name="generation-v" id="black_white">
+                <img src="./img/X_Y.jpg" alt="" name="generation-vi" id="x_y">
+                <img src="./img/sun_moon.jpg" alt="" name="generation-vii" id="sun_moon">
+                <img src="./img/sord_shield.jpg" alt="" name="generation-viii" id="sord_shield">
+            </div>
+
+
+        </section>
+        <section id="pokequiz" class="pokequiz" style="display: none;">
+            <div class="quiz_wrap">
+                <div id="quiz_img" class="quiz_img"></div>
+
+                <div class="hint">ヒント1:<i class="fa-solid fa-eye" id="hint_1btn" value="1"></i><span id="hint_1"></span></div>
+                <div class="hint">ヒント2:<i class="fa-solid fa-eye" id="hint_2btn" value="2" style="display: none;"></i><span id="hint_2"></span></div>
+                <div class="hint">ヒント3:<i class="fa-solid fa-eye" id="hint_3btn" value="3" style="display: none;"></i><span id="hint_3"></span></div>
+                
+                <div class="answer_area">
+                    <input type="text" placeholder="ポケモンの名前を入力してね" id="answer_val" class="answer_text">
+                    <button id="answer" class="btn">こたえる</button>
+                </div>
+            </div>
+
+        </section>
+        
+        <div id="true_wrap" class="answer_wrap" style="display: none;">
+            <div id="answer_true" class="answer_true">
+                <div class="true_text">せいかい！！</div>
+                <div class="true_text">モンスターボールを投げてポケモンをゲットしてね！</div>
+                <div id="pokeget"></div>
+            </div>
+        </div>
+
+        <div id="get_effect" class="answer_wrap" style="display: none;">
+            <div class="effect_text">やったね！！</div>
+            <div class="effect_text"><span id="getName"></span>をつかまえたよ！！</div>
+            <div id="poke_card" class="poke_card">
+                <div id="getPokeID"></div>
+                <div id="getPokeName"></div>
+                <div id="getPokeImg"></div>
+                <div id="getPokeType"></div>
+            </div>
+            <div class="next_back">
+                <button id="get_next" class="btn">次のポケモンへ</button>
+                <button id="get_backHome" class="btn">ホームへ戻る</button>
+            </div>
+
+        </div>
+
+        <div id="getfalse_effect" class="answer_wrap" style="display: none;">
+            <div class="effect_text">ざんねん</div>
+            <div class="effect_text"><span id="getfalseName"></span>は逃げてしまいました。。</div>
+            <div class="next_back">
+                <button id="getfalse_next" class="btn">次のポケモンへ</button>
+                <button id="getfalse_backHome" class="btn">ホームへ戻る</button>
+            </div>
+
+        </div>
+
+          
+        <div id="false_wrap" class="answer_wrap" style="display: none;">
+            <div id="answer_false" class="answer_false">
+                <div class="false_text">ざんねん！！</div>
+                <div class="false_text">このポケモンの名前は<span id="correct_name"></span>だよ</div>
+                <div class="next_back">
+                    <button id="false_next" class="btn">次のポケモンへ</button>
+                    <button id="false_backHome" class="btn">ホームへ戻る</button>
+                </div>
+            </div>
+        </div>
+
+
+
+        
+        <section id="index_area" class="index_area">
+            <div id="index" class="index"></div>
+        </section>
+
+    </main>
+    <footer>
+        <div class="footer_wrap">
+            <div class="homebtn_wrap"  id="backHome" style="display: none;">
+                <i class="fa-solid fa-house"></i>
+            </div>
+        </div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="js/matter.min.js"></script>
+    <script src="js/main.js" type="module"></script>
+</body>
+</html>

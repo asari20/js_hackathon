@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/login.css">
+   
+    <script src="https://kit.fontawesome.com/c117fbda8a.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+
+    <title>ログイン:ポケモン言えるかな？</title>
+</head>
+<body>
+    <main>
+        <section class="title">
+            <h1 class="eyecatch">
+                ポケモン
+                いえるかな？？
+            </h1>
+            
+            <button id="login" class="btn">ログインする</button>
+        </section>
+
+        <section>
+            <h2 class="main_title">あそびかた</h2>
+            <h3 class="section_title">~ポケモンをつかまえよう~</h3>
+
+            <div class="how_to_play">
+                <img src="/img/o-kido.png" alt="o-kido" class="chara_img">
+                <div class="how_to_play_text">
+                    <p>ようこそ！ポケモンワールドへ!<br>
+                    このゲームでは、ポケモンのなまえクイズにせいかいするとポケモンをゲットできるのじゃ!<br>
+                    ポケモンをすべて集めてポケモンマスターを目指そう！<br>
+                    まずは上のボタンからログインするのじゃ!そうすると、ポケモンのセカイにはいれるぞ！<br>
+                    さっそく「ぼうけんをはじめる」をおして、ぼうけんの旅にでるのじゃ!
+                    </p>
+                </div>
+            </div>
+
+            <div class="how_to_play">
+                <img src="/img/satoshi.png" alt="satoshi" class="chara_img">
+                <div class="how_to_play_text">
+                    <p>ぼうけんに出ると、すぐに下のようにポケモンの絵がでてくるよ！<br>
+                        出てきたポケモンのなまえがわかったら、なまえをこたえよう！<br>
+                        はじめは少しボケた絵になっているけど、ヒントを使うことで、少しづつはっきりした絵になるよ！<br>
+                        ただ、ヒントをたくさん使うとモンスターボールが少なくなるから注意しよう。。。
+                    </p>
+                </div>
+            </div>
+
+            <div class="how_to_play">
+                <img src="/img/takeshi.png" alt="satoshi" class="chara_img">
+                <div class="how_to_play_text">
+                    <p>クイズにせいかいすると、いよいよポケモンをゲットできるぞ。<br>
+                        下のがめんになったら、モンスターボールをひっぱって、ポケモンに当ててみよう！<br>
+                        ちゃんと当てることができたら、そのポケモンをゲットできるぞ！<br>
+                        モンスターボールは最大５個、ヒントを使うと１つずつ減ってしまうぞ！
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="section_title">~つかまえたポケモンをずかんで見てみよう~</h3>
+
+            <div class="how_to_play">
+                <img src="/img/kasumi.png" alt="satoshi" class="chara_img">
+                <div class="how_to_play_text">
+                    <p>ゲットしたポケモンは「ずかんをみる」からかくにんできるぞ！
+                        まだゲットしていないポケモンは出てこないから、すべてゲットできるまでがんばろう！
+                    </p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+    <footer></footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script type="module">
+        // ********************************************************************************************
+        // Firebase初期設定
+        // ********************************************************************************************
+        import { initializeApp } 
+        from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged,getAdditionalUserInfo } 
+        from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        import { getDatabase, ref, push, set, onValue,onChildAdded,remove, onChildRemoved } 
+        from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBH_FU4jxXIZILNeEy7_q9UZW7PsbX9H6M",
+            authDomain: "pokequiz-68893.firebaseapp.com",
+            projectId: "pokequiz-68893",
+            storageBucket: "pokequiz-68893.appspot.com",
+            messagingSenderId: "88509008074",
+            appId: "1:88509008074:web:292ba3a59f3db6b702cc33"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // db
+        const db = getDatabase(app);
+
+        // Google Auth認証用
+        const provider = new GoogleAuthProvider();
+        provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+        const auth = getAuth();
+
+        // ********************************************************************************************
+        // 変数設定
+        // ********************************************************************************************
+        const pokeGen =  "https://pokeapi.co/api/v2/generation";
+        const nameUrl =  "https://pokeapi.co/api/v2/pokemon-species/";
+        let genName = 0;
+        let genUrl ="";
+        let sliceResult
+        let pokeID =0;
+        let list = [];
+        let JSONlist;
+        const pokeIndex ={};               
+
+        // ********************************************************************************************
+        // 関数
+        // ********************************************************************************************
+        function initialList(uid,db){
+            $.get(pokeGen).then(function(data){
+            
+                for(let i =0; i < data.count; i++){
+                    genName = data.results[i].name;
+                    genUrl = data.results[i].url;
+                    const dbRef = ref(db, `users/${uid}/quizlist/${genName}`);
+                    set(dbRef, "");
+
+                    $.get(genUrl).then(function(genData){
+                        
+                        genData.pokemon_species.forEach(element => {             
+                            sliceResult = element.url.split("/")
+                            pokeID = sliceResult[sliceResult.length-2]
+                            
+                            list.push(pokeID)                         
+                        });
+
+                        JSONlist =JSON.stringify(list)
+                        set(dbRef,JSONlist)
+                        list=[];
+
+                    })                 
+
+                }
+
+            })
+
+        }
+
+        function initialpokeIndex(uid,db){
+            $.get(nameUrl, function(data){
+                const len = data.count;
+            
+                for(let i =1; i<len; i++){
+                    
+                    const dbRef = ref(db, `users/${uid}/pokeIndex/${i}`);
+                    const indexValue ={
+                        visible:false,
+                        name_ja:"",
+                        name_en:"",
+                        Oimg   :"",
+                        type   :"",
+                    }
+                    set(dbRef, indexValue)
+                }
+            })
+            
+        }    
+
+        function moveToGame(){
+            location.href = "game.html"
+        }
+
+        // ********************************************************************************************
+        // LogIn処理
+        // ********************************************************************************************
+
+        // LogIn処理
+        $("#login").on("click", function(){
+
+            signInWithPopup(auth, provider).then((result) =>{
+                
+                const uid = result.user.uid;
+                const newUser = getAdditionalUserInfo(result).isNewUser
+                
+                
+                // 初ログインの場合：クイズリスト作成
+                if(newUser == true){
+                   
+                    initialList(uid,db);
+                    initialpokeIndex(uid,db)
+
+
+                    setTimeout(() => {
+                        moveToGame();
+                    }, 1500);
+                    // async,awaitで処理に順番をつけるべき（一旦setTimeoutで前に進める）
+                    
+            
+                }else{
+                    moveToGame();
+                }
+                
+
+               
+
+            }).catch((error)=>{
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                const email = error.email;
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                console.log(error);
+            })
+        })
+
+
+      </script>
+</body>
+</html>
