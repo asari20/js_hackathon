@@ -104,7 +104,7 @@ function initialpokeIndex(uid,db){
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
-        apiKey: "AIzaSyBH_FU4jxXIZILNeEy7_q9UZW7PsbX9H6M",//API key削除
+        apiKey: "",//API key削除
         authDomain: "pokequiz-68893.firebaseapp.com",
         projectId: "pokequiz-68893",
         storageBucket: "pokequiz-68893.appspot.com",
