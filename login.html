@@ -221,16 +221,13 @@
 
                     setTimeout(() => {
                         moveToGame();
-                    }, 1500);
+                    }, 3000);
                     // async,awaitで処理に順番をつけるべき（一旦setTimeoutで前に進める）
                     
             
                 }else{
                     moveToGame();
                 }
-                
-
-               
 
             }).catch((error)=>{
                 const errorCode = error.code;

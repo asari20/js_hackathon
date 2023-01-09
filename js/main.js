@@ -50,7 +50,7 @@ const getStatus = document.getElementById("getStatus")
     from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signOut, onAuthStateChanged,} 
     from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-    import { getDatabase, ref, set, onValue,get } 
+    import { getDatabase, ref, set, get } 
     from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
     // Your web app's Firebase configuration
