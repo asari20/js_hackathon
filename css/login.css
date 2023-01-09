@@ -69,24 +69,15 @@ main{
     margin: 0 auto 20px;
 }
 
-.how_to_play:nth-of-type(odd){
+.how_to_play{
     display: flex;
     flex-flow: row;
+    justify-content: center;
     margin: 0 auto 20px;
 }
-.how_to_play:nth-of-type(odd) img{
+.how_to_play img{
     margin: 0 30px 0 0;
 }
-
-.how_to_play:nth-of-type(even){
-    display: flex;
-    flex-flow: row-reverse;
-    margin: 0 auto 20px;
-}
-.how_to_play:nth-of-type(even) img{
-    margin: 0 0 0 30px;
-}
-
 
 .chara_img{
     border-radius: 50%;
@@ -104,7 +95,7 @@ main{
   border-radius: 15px;
 }
 
-.how_to_play_text:nth-of-type(odd)::before {
+.how_to_play_text::before {
   content: "";
   position: absolute;
   top: 60px;
@@ -112,17 +103,6 @@ main{
   margin-top: -30px;
   border: 30px solid transparent;
   border-right: 30px solid #e0edff;
-}
-
-
-.how_to_play_text:nth-of-type(even)::before {
-    content: "";
-    position: absolute;
-    top: 60px;
-    right: -60px;
-    margin-top: -30px;
-    border: 30px solid transparent;
-    border-right: 30px solid #e0edff;
 }
 
 .playimg{
@@ -133,7 +113,6 @@ main{
 .playimg img{
     margin: 0 10px;
 }
-
 
 footer{
     width: 100%;
