@@ -4,6 +4,7 @@
 const G = {
     pokeUrl       : "https://pokeapi.co/api/v2/pokemon/",
     nameUrl       : "https://pokeapi.co/api/v2/pokemon-species/",
+    pokeGen       : "https://pokeapi.co/api/v2/generation",
     pokeName_ja   :"",
     pokeName_en   :"",
     pokeTypeArray :[],
@@ -39,8 +40,56 @@ const bgc = {
     フェアリー:"#F9D2C6",
     ダーク:"#2D3D48",
 }
+const list = [];
+let JSONlist =""
 
-const getStatus = document.getElementById("getStatus")
+// *********************************************初期セット***********************************************//
+function initialList(uid,db){
+    $.get(G.pokeGen, function(data){
+    
+        for(let i =0; i < data.count; i++){
+            const genName = data.results[i].name;
+            const genUrl = data.results[i].url;
+            const dbRef = ref(db, `users/${uid}/quizlist/${genName}`);
+            set(dbRef, "");
+
+            $.get(genUrl).then(function(genData){
+                
+                genData.pokemon_species.forEach((element) => {    
+                    
+                    const slice = element.url.split("/")
+                    const pokeID = slice[slice.length-2]
+                    
+                    list.push(pokeID)                         
+                });
+
+                JSONlist = JSON.stringify(list)
+                set(dbRef,JSONlist)
+                list.length =0;
+
+            })                 
+        }                
+    })
+    
+}
+function initialpokeIndex(uid,db){
+    $.get(G.nameUrl, function(data){
+        const len = data.count;
+    
+        for(let i =1; i<len; i++){
+            
+            const dbRef = ref(db, `users/${uid}/pokeIndex/${i}`);
+            const indexValue ={
+                visible:false,
+                name_ja:"",
+                name_en:"",
+                Oimg   :"",
+                type   :"",
+            }
+            set(dbRef, indexValue)
+        }
+    }) 
+}    
 
 
 // ********************************************************************************************
@@ -55,7 +104,7 @@ const getStatus = document.getElementById("getStatus")
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
-        apiKey: "",//API key削除
+        apiKey: "AIzaSyBH_FU4jxXIZILNeEy7_q9UZW7PsbX9H6M",//API key削除
         authDomain: "pokequiz-68893.firebaseapp.com",
         projectId: "pokequiz-68893",
         storageBucket: "pokequiz-68893.appspot.com",
@@ -91,7 +140,14 @@ const getStatus = document.getElementById("getStatus")
         if(user){
 
             G.uid = user.uid;
-
+            const initialref = ref(db,`users/${G.uid}`)
+            // 初回ログイン=uidに紐づくデータがない場合、初期セット実行
+            get(initialref).then((initial)=>{
+                if(initial.val() == null){
+                    initialList(G.uid,db);
+                    initialpokeIndex(G.uid,db)
+                }           
+            })
         }else{
             redirect();
         }
@@ -100,7 +156,7 @@ const getStatus = document.getElementById("getStatus")
         $("#logout").on("click", function(){
             signOut(auth).then(()=>{
                 redirect();
-            }).cathh((error)=>{
+            }).catch((error)=>{
                 console.log(error);
             })
         })
@@ -430,8 +486,6 @@ function matterSet(){
                     type   :JSONtype,
                 }
 
-                console.log(indexUpdate);
-
                 set(setQuizList,JSONupdate);
                 set(setIndex,indexUpdate)
 
@@ -479,9 +533,9 @@ function getAPI(){
 //********************************** FireBaseからクイズリスト取得**************************************//
 function pokeNamequiz(){
     const dbRef = ref(db, `users/${G.uid}/quizlist/${G.selectVersion}`)
-    get(dbRef).then((snapshot)=>{
-        const JSONList = snapshot.val();
-        G.selectList = JSON.parse(JSONList)
+    get(dbRef).then(async (snapshot)=>{
+        const JSONList = await snapshot.val();
+        G.selectList = await JSON.parse(JSONList)
 
         getAPI();//pokeAPIからクイズ取得機能へ
     });
@@ -652,7 +706,6 @@ $("#index_btn").on("click", function(){
         const data = snapshot.val();
         let indexCards ="";
         let i = 0
-        
         data.forEach((poke)=>{
          
             i ++;

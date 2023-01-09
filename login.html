@@ -101,16 +101,12 @@
         // ********************************************************************************************
         import { initializeApp } 
         from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged,getAdditionalUserInfo } 
-        from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-        import { getDatabase, ref, push, set, onValue,onChildAdded,remove, onChildRemoved } 
-        from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
-
-        
+        import { getAuth, signInWithPopup, GoogleAuthProvider} 
+        from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";       
       
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "",//API Key削除
+            apiKey: "AIzaSyBH_FU4jxXIZILNeEy7_q9UZW7PsbX9H6M",//API Key削除
             authDomain: "pokequiz-68893.firebaseapp.com",
             projectId: "pokequiz-68893",
             storageBucket: "pokequiz-68893.appspot.com",
@@ -121,83 +117,10 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
 
-        // db
-        const db = getDatabase(app);
-
         // Google Auth認証用
         const provider = new GoogleAuthProvider();
         provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
         const auth = getAuth();
-
-        // ********************************************************************************************
-        // 変数設定
-        // ********************************************************************************************
-        const pokeGen =  "https://pokeapi.co/api/v2/generation";
-        const nameUrl =  "https://pokeapi.co/api/v2/pokemon-species/";
-        let genName = 0;
-        let genUrl ="";
-        let sliceResult
-        let pokeID =0;
-        let list = [];
-        let JSONlist;
-        const pokeIndex ={};               
-
-        // ********************************************************************************************
-        // 関数
-        // ********************************************************************************************
-        function initialList(uid,db){
-            $.get(pokeGen).then(function(data){
-            
-                for(let i =0; i < data.count; i++){
-                    genName = data.results[i].name;
-                    genUrl = data.results[i].url;
-                    const dbRef = ref(db, `users/${uid}/quizlist/${genName}`);
-                    set(dbRef, "");
-
-                    $.get(genUrl).then(function(genData){
-                        
-                        genData.pokemon_species.forEach(element => {             
-                            sliceResult = element.url.split("/")
-                            pokeID = sliceResult[sliceResult.length-2]
-                            
-                            list.push(pokeID)                         
-                        });
-
-                        JSONlist =JSON.stringify(list)
-                        set(dbRef,JSONlist)
-                        list=[];
-
-                    })                 
-
-                }
-
-            })
-
-        }
-
-        function initialpokeIndex(uid,db){
-            $.get(nameUrl, function(data){
-                const len = data.count;
-            
-                for(let i =1; i<len; i++){
-                    
-                    const dbRef = ref(db, `users/${uid}/pokeIndex/${i}`);
-                    const indexValue ={
-                        visible:false,
-                        name_ja:"",
-                        name_en:"",
-                        Oimg   :"",
-                        type   :"",
-                    }
-                    set(dbRef, indexValue)
-                }
-            })
-            
-        }    
-
-        function moveToGame(){
-            location.href = "game.html"
-        }
 
         // ********************************************************************************************
         // LogIn処理
@@ -205,29 +128,8 @@
 
         // LogIn処理
         $("#login").on("click", function(){
-
             signInWithPopup(auth, provider).then((result) =>{
-                
-                const uid = result.user.uid;
-                const newUser = getAdditionalUserInfo(result).isNewUser
-                
-                
-                // 初ログインの場合：クイズリスト作成
-                if(newUser == true){
-                   
-                    initialList(uid,db);
-                    initialpokeIndex(uid,db)
-
-
-                    setTimeout(() => {
-                        moveToGame();
-                    }, 3000);
-                    // async,awaitで処理に順番をつけるべき（一旦setTimeoutで前に進める）
-                    
-            
-                }else{
-                    moveToGame();
-                }
+                location.href = "game.html"
 
             }).catch((error)=>{
                 const errorCode = error.code;
@@ -235,6 +137,7 @@
                 const email = error.email;
                 const credential = GoogleAuthProvider.credentialFromError(error);
                 console.log(error);
+
             })
         })
 
