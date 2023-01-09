@@ -55,7 +55,7 @@ const getStatus = document.getElementById("getStatus")
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
-        apiKey: "AIzaSyBH_FU4jxXIZILNeEy7_q9UZW7PsbX9H6M",
+        apiKey: "",//API key削除
         authDomain: "pokequiz-68893.firebaseapp.com",
         projectId: "pokequiz-68893",
         storageBucket: "pokequiz-68893.appspot.com",
@@ -484,7 +484,6 @@ function pokeNamequiz(){
         G.selectList = JSON.parse(JSONList)
 
         getAPI();//pokeAPIからクイズ取得機能へ
-        console.log(G);//カンニング用（要削除）******************************************************************************
     });
 }
 //********************************** 正誤判定**************************************//
