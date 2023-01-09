@@ -80,7 +80,7 @@ const getStatus = document.getElementById("getStatus")
 // ********************************************************************************************
 
     function redirect(){
-        location.href = "login.html"
+        location.href = "index.html"
     }
 
 // ********************************************************************************************
