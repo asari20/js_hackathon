@@ -509,16 +509,17 @@ function matterSet(){
 // ********************************************************************************************
 
 //********************************** pokeAPIからクイズ取得**************************************//
-function getAPI(){
-    G.random = Math.ceil(Math.random() * G.selectList.length)
-    $.get(`${G.nameUrl}${G.selectList[G.random]}/`, function(pokeName){
+function pokeNamequiz(){
+    G.random = Math.floor(Math.random() * G.selectList.length);
+    $.get(`${G.nameUrl}${G.selectList[G.random]}/`)
+    .done(function(pokeName){
         G.pokeName_ja = pokeName.names[0].name;
         G.pokeName_en = pokeName.names[8].name;
         G.genera      = pokeName.genera[0].genus;
 
     })
-
-    $.get(`${G.pokeUrl}${G.selectList[G.random]}/`,function(pokeDetail){
+    $.get(`${G.pokeUrl}${G.selectList[G.random]}/`)
+    .done(function(pokeDetail){
         G.pokeOimg = pokeDetail.sprites.other["official-artwork"].front_default;
         G.pokeDimg =  pokeDetail.sprites.front_default;
         $(`#quiz_img`).html(`<img src="${G.pokeOimg}" id="pokeOimg" style="filter: blur(15px)">`);
@@ -528,18 +529,11 @@ function getAPI(){
                 G.pokeTypes.push(typeData.names[0].name);
             })
         })
+    }).fail(function(error){
+        alert("読み込みエラーが発生しました。ページをリロードして下さい。");
     })
 }
-//********************************** FireBaseからクイズリスト取得**************************************//
-function pokeNamequiz(){
-    const dbRef = ref(db, `users/${G.uid}/quizlist/${G.selectVersion}`)
-    get(dbRef).then(async (snapshot)=>{
-        const JSONList = await snapshot.val();
-        G.selectList = await JSON.parse(JSONList)
 
-        getAPI();//pokeAPIからクイズ取得機能へ
-    });
-}
 //********************************** 正誤判定**************************************//
 function judge(){
     if($("#answer_val").val() ==G.pokeName_ja){
@@ -627,11 +621,15 @@ $("#red_green,#gold_silver,#ruby_saphia,#diamond_parl,#black_white,#x_y,#sun_moo
 })
 
 
-$("#version_send").on("click", function(){
+$("#version_send").on("click", async function(){
     G.selectVersion =$("#version").val();
-
-    displaychange("#version_select", "#pokequiz")
+    const dbRef = ref(db, `users/${G.uid}/quizlist/${G.selectVersion}`)
+    await get(dbRef).then(async (snapshot)=>{
+        const JSONList = snapshot.val();
+        G.selectList = JSON.parse(JSONList);
+    });
     pokeNamequiz();
+    displaychange("#version_select", "#pokequiz");
 })
 
 
